@@ -137,6 +137,62 @@ The API includes proper error handling for:
 4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+
+## Docker Setup and Deployment
+
+1. Build the Docker image:
+
+```bash
+docker build -t fastapi-app .
+```
+
+2. Run the Docker container:
+
+```bash
+docker run -d -p 80:80 -p 8000:8000 fastapi-app
+```
+
+This will start your FastAPI application with Nginx as a reverse proxy, all managed by Supervisor inside the Docker container.
+
+## Deployment to Azure Container Apps (ACA)
+
+### Prerequisites
+
+- Azure CLI installed and configured
+- Azure Container Registry (ACR) created
+- Azure credentials set up in GitHub Secrets
+
+### Local setup and Deployment
+
+1. **Get Variables ready:** Provision and Azure Container Instance (AC) and get variables for Azure Container Registry (ACR) name, login server, image name, resource group, ACI name, DNS name label, local port, ACR username, and password.
+2. **Build Docker Image:** Build a Docker image with a specified name.
+3. **Run Docker Container Locally:** Run the Docker container locally on the specified port.
+4. **Test Locally:** Test the application locally by sending a request to `http://localhost`.
+5. **Login to ACR:** Log into the Azure Container Registry.
+6. **Tag Docker Image:** Tag the Docker image for pushing to ACR.
+7. **Push Docker Image to ACR:** Push the Docker image to the Azure Container Registry.
+8. **Deploy to ACA:** Deploy the Docker image to Azure Container Apps with specified resources and DNS name label.
+9. **Test on ACA:** Test the application on ACA by sending a request to the deployed container's URL.
+
+### Continuous Deployment (CD) Pipeline
+
+The project includes a GitHub Actions workflow for continuous deployment. The workflow is triggered on PR merge to the `main` branch.
+
+1. Ensure the following secrets are set in your GitHub repository settings:
+   - `AZURE_CREDENTIALS`
+   - `ACR_LOGIN_SERVER`
+   - `ACR_USERNAME`
+   - `ACR_PASSWORD`
+
+2. The workflow file is located at `.github/workflows/cd.yml` and will automatically build, push, and deploy the Docker image to ACI.
+
+### Accessing the Deployed Application
+
+After deployment, the application will be accessible at the specified DNS name. This project is accessible at:
+
+```bash
+https://fastapi-app-book-project.prouddesert-dc701ba3.uksouth.azurecontainerapps.io/
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
