@@ -58,6 +58,7 @@ def test_get_book_success():
     assert response.json()["title"] == "The Hobbit: An Unexpected Journey"
 
 # Test to get a single book by ID (not found case)
+# This test will fail because the book with ID 999 does not exist
 
 
 def test_get_book_not_found():
